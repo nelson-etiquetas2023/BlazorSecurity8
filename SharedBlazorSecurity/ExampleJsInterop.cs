@@ -1,5 +1,7 @@
 using Microsoft.JSInterop;
 
+#pragma warning disable CA1816 // Los métodos Dispose deberían llamar a SuppressFinalize
+#pragma warning disable IDE0290 // Usar constructor principal
 namespace SharedBlazorSecurity
 {
 	// This class provides an example of how JavaScript functionality can be wrapped
@@ -14,6 +16,7 @@ namespace SharedBlazorSecurity
 		private readonly Lazy<Task<IJSObjectReference>> moduleTask;
 
 		public ExampleJsInterop(IJSRuntime jsRuntime)
+
 		{
 			moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
 				"import", "./_content/SharedBlazorSecurity/exampleJsInterop.js").AsTask());
@@ -25,7 +28,8 @@ namespace SharedBlazorSecurity
 			return await module.InvokeAsync<string>("showPrompt", message);
 		}
 
-		public async ValueTask DisposeAsync()
+		async ValueTask IAsyncDisposable.DisposeAsync()
+
 		{
 			if (moduleTask.IsValueCreated)
 			{

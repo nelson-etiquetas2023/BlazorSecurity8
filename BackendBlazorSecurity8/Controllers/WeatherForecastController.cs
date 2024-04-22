@@ -1,15 +1,20 @@
 using Microsoft.AspNetCore.Mvc;
 
+
+#pragma warning disable IDE0290 // Usar constructor principal
+#pragma warning disable IDE0052 // Quitar miembros privados no leídos
+
 namespace BackendBlazorSecurity8.Controllers
 {
 	[ApiController]
 	[Route("[controller]")]
 	public class WeatherForecastController : ControllerBase
 	{
-		private static readonly string[] Summaries = new[]
-		{
+		private static readonly string[] Summaries =
+		[
 			"Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-		};
+		];
+
 
 		private readonly ILogger<WeatherForecastController> _logger;
 
