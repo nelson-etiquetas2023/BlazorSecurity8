@@ -1,0 +1,58 @@
+﻿using BackendBlazorSecurity8.Data;
+using BackendBlazorSecurity8.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SharedBlazorSecurity.Models;
+
+
+#pragma warning disable IDE0290 // Usar constructor principal
+namespace BackendBlazorSecurity8.Repositories.Implementations
+{
+	public class UserRepository : IUserRepository
+	{
+		private readonly ApplicationDbContext _Context;
+		private readonly UserManager<User> _UserManager;
+		private readonly RoleManager<IdentityRole> _RoleManager;
+
+		public UserRepository(ApplicationDbContext context, UserManager<User> usemanager, RoleManager<IdentityRole> useRole) 
+
+        {
+			_Context = context;
+			_UserManager = usemanager;
+			_RoleManager = useRole;	
+		}
+
+        public async Task<IdentityResult> AddUserAsync(User user, string password)
+		{
+			return await _UserManager.CreateAsync(user, password);
+		}
+
+		public async Task AddUserToRoleAsync(User user, string roleName)
+		{
+			await _UserManager.AddToRoleAsync(user, roleName);	
+		}
+
+		public async Task CheckRoleAsync(string roleName)
+		{
+			var roleExist = await _RoleManager.RoleExistsAsync(roleName);
+			if (!roleExist) 
+			{
+				await _RoleManager.CreateAsync(new IdentityRole
+				{
+					Name = roleName
+				});
+			}
+		}
+
+		public async Task<User> GetUserAsync(string email)
+		{
+			var user = await _Context.Users.FirstOrDefaultAsync(x => x.Email == email);
+			return user!;
+		}
+
+		public async Task<bool> IsUserInRoleAsync(User user, string roleName)
+		{
+			return await _UserManager.IsInRoleAsync(user, roleName);
+		}
+	}
+}
