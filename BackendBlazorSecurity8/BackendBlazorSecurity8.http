@@ -1,0 +1,6 @@
+@BackendBlazorSecurity8_HostAddress = http://localhost:5203
+
+GET {{BackendBlazorSecurity8_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
