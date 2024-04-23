@@ -19,7 +19,6 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
         public async Task<IdentityResult> AddUserAsync(User user, string password) => 
 			await _userRepository.AddUserAsync(user, password);
 
-
 		public async Task AddUserToRoleAsync(User user, string roleName) =>
 			await _userRepository.AddUserToRoleAsync(user, roleName);
 
@@ -29,20 +28,13 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 		public async Task<User> GetUserAsync(string email) =>
 			await _userRepository.GetUserAsync(email);
 
-		public Task<bool> IsUserInRoleAsync(User user, string roleName)
-		{
-			throw new NotImplementedException();
-		}
-
-		public async Task<SignInResult> LoginAsync(LoginDTO model)
-		{
-			throw new NotImplementedException();
-		}
-
-
-		public Task LogoutAsync()
-		{
-			throw new NotImplementedException();
-		}
+		public async Task<bool> IsUserInRoleAsync(User user, string roleName) =>
+			await _userRepository.IsUserInRoleAsync(user, roleName);
+	
+		public async Task<SignInResult> LoginAsync(LoginDTO model) =>
+			await _userRepository.LoginAsync(model);
+		
+		public async Task LogoutAsync() =>
+			await _userRepository.LogoutAsync();
 	}
 }

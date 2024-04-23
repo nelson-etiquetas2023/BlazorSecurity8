@@ -43,7 +43,6 @@ namespace BackendBlazorSecurity8.Data
 					PhoneNumber = phone,
 					Address = address,
 					Document = document,
-					City = _context.Ciudades.FirstOrDefault(),
 					UserType = userType
 				};
 				await _usersUnitsOfWork.AddUserAsync(user, "123456");

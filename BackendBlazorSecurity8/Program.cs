@@ -18,6 +18,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer("name=SettingEtiquetas"));
+builder.Services.AddTransient<SeedDb>();
 
 // 1.- Inyecto el servicio de Repositorio de  usuario.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -41,6 +42,30 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
 
 
 var app = builder.Build();
+
+//Inyeccion de seeder de carga de datos.
+SeedData(app);
+
+#pragma warning disable IDE0062 // Convertir la función local "static"
+void SeedData(WebApplication app) 
+{
+	var scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+
+	using var scope = scopedFactory!.CreateScope();
+	var service = scope.ServiceProvider.GetService<SeedDb>();
+	service!.SeedAsync().Wait();
+}
+#pragma warning restore IDE0062 // Convertir la función local "static"
+
+//Configuracion de los CORS.
+app.UseCors(x => x
+	.AllowAnyMethod()
+	.AllowAnyHeader()
+	.SetIsOriginAllowed(origin => true)
+	.AllowCredentials()
+);
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
