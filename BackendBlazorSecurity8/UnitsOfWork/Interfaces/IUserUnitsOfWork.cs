@@ -1,10 +1,10 @@
-﻿ using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using SharedBlazorSecurity.DTOs;
 using SharedBlazorSecurity.Models;
 
-namespace BackendBlazorSecurity8.Repositories.Interfaces
+namespace BackendBlazorSecurity8.UnitsOfWork.Interfaces
 {
-	public interface IUserRepository
+	public interface IUserUnitsOfWork
 	{
 		Task<User> GetUserAsync(string email);
 		Task<IdentityResult> AddUserAsync(User user, string password);

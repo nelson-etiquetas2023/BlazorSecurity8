@@ -11,7 +11,7 @@ namespace BackendBlazorSecurity8.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
-        public DbSet<Category> Categorias { get; set; }
+        public DbSet<Category> Categories { get; set; }
 		public DbSet<City> Ciudades { get; set; }
 		public DbSet<Country> Paises { get; set; }
 		public DbSet<State> Estados { get; set; }

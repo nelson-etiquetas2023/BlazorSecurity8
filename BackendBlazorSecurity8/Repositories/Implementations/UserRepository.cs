@@ -2,6 +2,7 @@
 using BackendBlazorSecurity8.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SharedBlazorSecurity.DTOs;
 using SharedBlazorSecurity.Models;
 
 
@@ -53,6 +54,16 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		public async Task<bool> IsUserInRoleAsync(User user, string roleName)
 		{
 			return await _UserManager.IsInRoleAsync(user, roleName);
+		}
+
+		public Task<SignInResult> LoginAsync(LoginDTO model)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Task LogoutAsync()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
