@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SharedBlazorSecurity.DTOs;
 using SharedBlazorSecurity.Models;
+using System.Reflection.Metadata.Ecma335;
 
 
 #pragma warning disable IDE0290 // Usar constructor principal
@@ -14,13 +15,15 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		private readonly ApplicationDbContext _Context;
 		private readonly UserManager<User> _UserManager;
 		private readonly RoleManager<IdentityRole> _RoleManager;
+		private readonly SignInManager<User> _SignInManager;
 
-		public UserRepository(ApplicationDbContext context, UserManager<User> usemanager, RoleManager<IdentityRole> useRole) 
+		public UserRepository(ApplicationDbContext context, UserManager<User> usemanager, RoleManager<IdentityRole> useRole, SignInManager<User> SignManager )  
 
         {
 			_Context = context;
 			_UserManager = usemanager;
 			_RoleManager = useRole;	
+			_SignInManager = SignManager;
 		}
 
         public async Task<IdentityResult> AddUserAsync(User user, string password)
@@ -56,14 +59,14 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 			return await _UserManager.IsInRoleAsync(user, roleName);
 		}
 
-		public Task<SignInResult> LoginAsync(LoginDTO model)
+		public async Task<SignInResult> LoginAsync(LoginDTO model)
 		{
-			throw new NotImplementedException();
+			return await _SignInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
 		}
 
-		public Task LogoutAsync()
+		public async Task LogoutAsync()
 		{
-			throw new NotImplementedException();
+			await _SignInManager.SignOutAsync();
 		}
 	}
 }
