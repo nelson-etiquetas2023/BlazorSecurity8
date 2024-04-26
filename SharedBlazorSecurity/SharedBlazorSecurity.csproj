@@ -16,8 +16,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FrontendBlazorSecurity8\FrontendBlazorSecurity8.csproj" />
-  </ItemGroup>
-
 </Project>

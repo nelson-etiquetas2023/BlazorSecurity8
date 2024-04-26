@@ -17,15 +17,15 @@ namespace FrontendBlazorSecurity8.AuthenticationProviders
 		private readonly string _tokenkey;
 		private readonly AuthenticationState _anonimous;
 
-        public AuthenticationProviderJWT(IJSRuntime jsRuntime, HttpClient httpClient)
-        {
+		public AuthenticationProviderJWT(IJSRuntime jsRuntime, HttpClient httpClient)
+		{
 			_jsRuntime = jsRuntime;
 			_httpClient = httpClient;
 			_tokenkey = "TOKEN_KEY";
 			_anonimous = new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 		}
 
-        public override async Task<AuthenticationState> GetAuthenticationStateAsync()
+		public override async Task<AuthenticationState> GetAuthenticationStateAsync()
 		{
 			var token = await _jsRuntime.GetLocalStorage(_tokenkey);
 			if (token is null)
@@ -43,7 +43,7 @@ namespace FrontendBlazorSecurity8.AuthenticationProviders
 			return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt")));
 		}
 
-		private IEnumerable<Claim> ParseClaimsFromJWT(string token) 
+		private IEnumerable<Claim> ParseClaimsFromJWT(string token)
 		{
 			var jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
 			var unserializedToken = jwtSecurityTokenHandler.ReadJwtToken(token);

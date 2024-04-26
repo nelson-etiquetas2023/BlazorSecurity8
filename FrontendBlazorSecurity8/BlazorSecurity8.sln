@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontendBlazorSecurity8", "FrontendBlazorSecurity8.csproj", "{125539E0-1549-4C3F-B836-BDA871EBB3A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FrontendBlazorSecurity8", "FrontendBlazorSecurity8.csproj", "{125539E0-1549-4C3F-B836-BDA871EBB3A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendBlazorSecurity8", "..\BackendBlazorSecurity8\BackendBlazorSecurity8.csproj", "{86B4702A-0FBA-4257-9178-4B3C1BDCEC03}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackendBlazorSecurity8", "..\BackendBlazorSecurity8\BackendBlazorSecurity8.csproj", "{86B4702A-0FBA-4257-9178-4B3C1BDCEC03}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedBlazorSecurity", "..\SharedBlazorSecurity\SharedBlazorSecurity.csproj", "{030255CD-B468-4EA8-A7E0-7281FA5A5314}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedBlazorSecurity", "..\SharedBlazorSecurity\SharedBlazorSecurity.csproj", "{030255CD-B468-4EA8-A7E0-7281FA5A5314}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

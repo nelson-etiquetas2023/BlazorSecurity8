@@ -10,7 +10,7 @@ namespace FrontendBlazorSecurity8.AuthenticationProviders
 			await Task.Delay(3000);
 			var anonimus = new ClaimsIdentity();
 			var user = new ClaimsIdentity(authenticationType: "test");
-			var admin = new ClaimsIdentity(new List<Claim> { 
+			var admin = new ClaimsIdentity(new List<Claim> {
 				new Claim("FirstName", "Juan"),
 				new Claim("LastName", "Zulu"),
 				new Claim(ClaimTypes.Name, "zulu@yopmail.com"),
