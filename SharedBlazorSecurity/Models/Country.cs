@@ -5,6 +5,7 @@ namespace SharedBlazorSecurity.Models
 {
 	public class Country : IEntityWithName
 	{
+		[Key]
 		public int Id { get; set; }
 
 		[Display(Name = "País")]

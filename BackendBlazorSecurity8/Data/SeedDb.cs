@@ -43,8 +43,11 @@ namespace BackendBlazorSecurity8.Data
 					PhoneNumber = phone,
 					Address = address,
 					Document = document,
-					UserType = userType
+					UserType = userType,
+					City = _context.Ciudades.FirstOrDefault(),
+
 				};
+				
 				await _usersUnitsOfWork.AddUserAsync(user, "123456");
 				await _usersUnitsOfWork.AddUserToRoleAsync(user, userType.ToString());
 			}
@@ -87,11 +90,68 @@ namespace BackendBlazorSecurity8.Data
 		{
 			if (!_context.Paises.Any())
 			{
-				_context.Paises.Add(new Country{Name = "Colombia"});
-				_context.Paises.Add(new Country { Name = "Venezuela" });
-				_context.Paises.Add(new Country { Name = "Brazil" });
+				_context.Paises.Add(new Country
+				{
+					Name = "Colombia",
+					States =
+			[
+				new State()
+				{
+					Name = "Antioquia",
+					Cities = [
+						new City() { Name = "Medellín" },
+						new City() { Name = "Itagüí" },
+						new City() { Name = "Envigado" },
+						new City() { Name = "Bello" },
+						new City() { Name = "Rionegro" },
+					]
+				},
+				new State()
+				{
+					Name = "Bogotá",
+					Cities = [
+						new City() { Name = "Usaquen" },
+						new City() { Name = "Champinero" },
+						new City() { Name = "Santa fe" },
+						new City() { Name = "Useme" },
+						new City() { Name = "Bosa" },
+					]
+				},
+			]
+				});
+				_context.Paises.Add(new Country
+				{
+					Name = "Estados Unidos",
+					States =
+			[
+				new State()
+				{
+					Name = "Florida",
+					Cities = [
+						new City() { Name = "Orlando" },
+						new City() { Name = "Miami" },
+						new City() { Name = "Tampa" },
+						new City() { Name = "Fort Lauderdale" },
+						new City() { Name = "Key West" },
+					]
+				},
+				new State()
+				{
+					Name = "Texas",
+					Cities = [
+						new City() { Name = "Houston" },
+						new City() { Name = "San Antonio" },
+						new City() { Name = "Dallas" },
+						new City() { Name = "Austin" },
+						new City() { Name = "El Paso" },
+					]
+				},
+			]
+				});
 			}
+
 			await _context.SaveChangesAsync();
+
 		}
 	}
 }

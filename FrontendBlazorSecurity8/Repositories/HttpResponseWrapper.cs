@@ -2,40 +2,39 @@
 using System.Runtime.CompilerServices;
 
 #pragma warning disable IDE0290 // Usar constructor principal
-#pragma warning disable IDE1006 // Estilos de nombres
 namespace FrontendBlazorSecurity8.Repositories
 {
 	public class HttpResponseWrapper<T>
 	{
 
-		public T? _response { get; }
+		public T? Response { get; }
 
-		public bool _error { get; }
-		public HttpResponseMessage _httpResponseMessage { get; }
+		public bool Error { get; }
+		public HttpResponseMessage HttpResponseMessage { get; }
 
 		public HttpResponseWrapper(T? response, bool error, HttpResponseMessage httpResponseMessage)
 
         {
-			_response = response;
-			_error  = error;
-			_httpResponseMessage = httpResponseMessage;
+			Response = response;
+			Error  = error;
+			HttpResponseMessage = httpResponseMessage;
 		}
 
 		public async Task<string?> GetErrorMessageAsync() 
 		{
-			if (!_error) 
+			if (!Error) 
 			{
 				return null;
 			}
 
-			var statusCode = _httpResponseMessage.StatusCode;
+			var statusCode = HttpResponseMessage.StatusCode;
 			if (statusCode == HttpStatusCode.NotFound) 
 			{
 				return "Recurso no encontrado.";
 			}
 			if (statusCode == HttpStatusCode.BadRequest) 
 			{
-				return await _httpResponseMessage.Content.ReadAsStringAsync();
+				return await HttpResponseMessage.Content.ReadAsStringAsync();
 			}
 			if (statusCode == HttpStatusCode.Unauthorized) 
 			{
@@ -47,8 +46,6 @@ namespace FrontendBlazorSecurity8.Repositories
 			}
 
 			return "Ha ocurrido un error inesperado.";
-
 		}
-
 	}
 }
