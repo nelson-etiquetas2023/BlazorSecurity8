@@ -92,8 +92,8 @@ namespace BackendBlazorSecurity8.Data
 			{
 				_context.Paises.Add(new Country
 				{
-					Name = "Colombia",
-					States =
+					name = "Colombia",
+					states =
 			[
 				new State()
 				{
@@ -121,8 +121,8 @@ namespace BackendBlazorSecurity8.Data
 				});
 				_context.Paises.Add(new Country
 				{
-					Name = "Estados Unidos",
-					States =
+					name = "Estados Unidos",
+					states =
 			[
 				new State()
 				{

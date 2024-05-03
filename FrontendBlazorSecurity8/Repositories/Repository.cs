@@ -1,5 +1,4 @@
-﻿
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 
 #pragma warning disable IDE1006 // Estilos de nombres
@@ -10,10 +9,12 @@ namespace FrontendBlazorSecurity8.Repositories
 	public class Repository : IRepository
 	{
 		private readonly HttpClient _httpClient;
-
+		
+		
 		private JsonSerializerOptions _jsonDefaultOptions => new()
 		{
 			PropertyNameCaseInsensitive = true
+			
 		};
 
 		public Repository(HttpClient httpClient)
@@ -28,7 +29,7 @@ namespace FrontendBlazorSecurity8.Repositories
 			if (responseHttp.IsSuccessStatusCode) 
 			{
 				var response = await UnserializeAnswerAsync<T>(responseHttp);
-				return new HttpResponseWrapper<T>(response, true, responseHttp);
+				return new HttpResponseWrapper<T>(response, false, responseHttp);
 			}
 
 			return new HttpResponseWrapper<T>(default, true, responseHttp);
@@ -86,9 +87,11 @@ namespace FrontendBlazorSecurity8.Repositories
 
 		private async Task<T> UnserializeAnswerAsync<T>(HttpResponseMessage responseHttp)
 		{
+			
+			responseHttp.EnsureSuccessStatusCode();
 			var response = await responseHttp.Content.ReadAsStringAsync();
+			Console.WriteLine(response);
 			return JsonSerializer.Deserialize<T>(response, _jsonDefaultOptions)!;
-
 		}
 	}
 }

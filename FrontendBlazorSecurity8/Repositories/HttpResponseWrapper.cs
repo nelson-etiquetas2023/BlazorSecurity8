@@ -28,6 +28,7 @@ namespace FrontendBlazorSecurity8.Repositories
 			}
 
 			var statusCode = HttpResponseMessage.StatusCode;
+
 			if (statusCode == HttpStatusCode.NotFound) 
 			{
 				return "Recurso no encontrado.";

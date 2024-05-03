@@ -1,4 +1,5 @@
-﻿using BackendBlazorSecurity8.UnitsOfWork.Interfaces;
+﻿using BackendBlazorSecurity8.Repositories.Interfaces;
+using BackendBlazorSecurity8.UnitsOfWork.Interfaces;
 using SharedBlazorSecurity.Responses;
 
 #pragma warning disable IDE0290 // Usar constructor principal
@@ -6,9 +7,9 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 {
 	public class GenericUnitOfWork<T> : IGenericUnitOfWork<T> where T : class
 	{
-		private readonly IGenericUnitOfWork<T> _repository;
+		private readonly IGenericRepository<T> _repository;
 
-		public GenericUnitOfWork(IGenericUnitOfWork<T> repository)
+		public GenericUnitOfWork(IGenericRepository<T> repository)
         {
 			_repository = repository;
 		}

@@ -32,7 +32,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 
 		private async Task LoadCountriesAsync()
 		{
-			var responseHttp = await Repository.GetAsync<List<Country>>($"/api/countries/combo");
+			var responseHttp = await Repository.GetAsync<List<Country>>($"/api/Countries/combo");
 
 			if (responseHttp.Error) 
 			{
@@ -40,6 +40,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 				await Swal.FireAsync("Error", message, "error");
 				return;
 			}
+
 			countries = responseHttp.Response;
 		}
 

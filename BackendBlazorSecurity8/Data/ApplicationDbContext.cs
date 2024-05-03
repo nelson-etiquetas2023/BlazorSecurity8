@@ -22,7 +22,7 @@ namespace BackendBlazorSecurity8.Data
 		{
 			base.OnModelCreating(modelbuilder);
 			modelbuilder.Entity<Category>().HasIndex(x => x.Name).IsUnique();
-			modelbuilder.Entity<Country>().HasIndex(x => x.Name).IsUnique();
+			modelbuilder.Entity<Country>().HasIndex(x => x.name).IsUnique();
 			modelbuilder.Entity<City>().HasIndex(x => new { x.StateId, x.Name }).IsUnique();
 			modelbuilder.Entity<State>().HasIndex(x => new { x.CountryId, x.Name }).IsUnique();
 			DisableCascadingDelete(modelbuilder);
