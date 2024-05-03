@@ -60,8 +60,13 @@ builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+//Country Repository-UnitOfWork
 builder.Services.AddScoped<ICountriesReposity, CountryRepository>();
 builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+
+//State Repository-UnitOfWork
+builder.Services.AddScoped<IStateRepository, StateRepository>();	
+builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 
 
 // 1.- Inyecto el servicio de Repositorio de  usuario.
