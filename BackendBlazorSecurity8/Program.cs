@@ -68,6 +68,10 @@ builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
 builder.Services.AddScoped<IStateRepository, StateRepository>();	
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 
+//Cities Repository-UniOfWork
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
+
 
 // 1.- Inyecto el servicio de Repositorio de  usuario.
 builder.Services.AddScoped<IUserRepository, UserRepository>();

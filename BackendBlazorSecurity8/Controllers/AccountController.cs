@@ -12,18 +12,12 @@ namespace BackendBlazorSecurity8.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class AccountController : ControllerBase
+	public class AccountController(IUserUnitsOfWork usersUnitOfWork, IConfiguration configuration) : ControllerBase
 	{
-        private readonly IUserUnitsOfWork _usersUnitOfWork;
-        private readonly IConfiguration _configuration;
+        private readonly IUserUnitsOfWork _usersUnitOfWork = usersUnitOfWork;
+        private readonly IConfiguration _configuration = configuration;
 
-        public AccountController(IUserUnitsOfWork usersUnitOfWork, IConfiguration configuration)
-        {
-            _usersUnitOfWork = usersUnitOfWork;
-            _configuration = configuration;
-        }
-
-        [HttpPost("CreateUser")]
+		[HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model) 
         {
             User user = model;

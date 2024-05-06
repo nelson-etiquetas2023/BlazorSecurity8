@@ -55,7 +55,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 			userDTO.UserName = userDTO.Email;
 			userDTO.UserType = UserType.User;
 			loading = true;
-			var responseHttp = await Repository.PostAsync<UserDTO, TokenDTO>("/api/accounts/CreateUser", userDTO);
+			var responseHttp = await Repository.PostAsync<UserDTO, TokenDTO>("/Api/Account/CreateUser", userDTO);
 			loading = false;
 
 			if (responseHttp.Error) 
