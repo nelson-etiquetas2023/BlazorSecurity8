@@ -22,6 +22,11 @@ namespace FrontendBlazorSecurity8.Repositories
 			_httpClient = httpClient;   
         }
 
+		public async Task<HttpResponseWrapper<object>> GetAsync(string url)
+		{
+			var responseHTTP = await _httpClient.GetAsync(url);
+			return new HttpResponseWrapper<object>(null, !responseHTTP.IsSuccessStatusCode, responseHTTP);
+		}
 
 		public async Task<HttpResponseWrapper<T>> GetAsync<T>(string url)
 		{

@@ -16,7 +16,19 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 			_userRepository = userRepository;
         }
 
-        public async Task<IdentityResult> AddUserAsync(User user, string password) => 
+		public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password) =>
+			await _userRepository.ResetPasswordAsync(user, token, password);
+	
+		public async Task<IdentityResult> ConfirmEmailAsync(User user, string token) => await _userRepository.ConfirmEmailAsync(user,token);
+	
+
+		public Task<string> GenerateEmailConfirmationTokenAsync(User user) => _userRepository.GenerateEmailConfirmationTokenAsync(user);
+
+
+		public async Task<string> GeneratePasswordResetTokenAsync(User user) => await _userRepository.GeneratePasswordResetTokenAsync(user);
+	
+
+		public async Task<IdentityResult> AddUserAsync(User user, string password) => 
 			await _userRepository.AddUserAsync(user, password);
 
 		public async Task AddUserToRoleAsync(User user, string roleName) =>
@@ -24,6 +36,8 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 
 		public async Task CheckRoleAsync(string roleName) =>
 			await _userRepository.CheckRoleAsync(roleName);
+
+		
 
 		public async Task<User> GetUserAsync(string email) =>
 			await _userRepository.GetUserAsync(email);
@@ -36,5 +50,6 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 		
 		public async Task LogoutAsync() =>
 			await _userRepository.LogoutAsync();
+
 	}
 }

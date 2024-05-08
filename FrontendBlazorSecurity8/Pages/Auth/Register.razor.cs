@@ -34,6 +34,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 		{
 			var responseHttp = await Repository.GetAsync<List<Country>>($"/api/Countries/combo");
 
+
 			if (responseHttp.Error) 
 			{
 				var message = await responseHttp.GetErrorMessageAsync();

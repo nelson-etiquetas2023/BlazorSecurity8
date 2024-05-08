@@ -26,7 +26,32 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 			_SignInManager = SignManager;
 		}
 
-        public async Task<IdentityResult> AddUserAsync(User user, string password)
+		public async Task<string> GeneratePasswordResetTokenAsync(User user)
+		{
+			return await _UserManager.GeneratePasswordResetTokenAsync(user);
+		}
+
+		public async Task<IdentityResult> ResetPasswordAsync(User user, string token, string password)
+		{
+			return await _UserManager.ResetPasswordAsync(user, token, password);
+		}
+
+		public async Task<string> GenerateEmailConfirmationTokenAsync(User user)
+		{
+			return await _UserManager.GenerateEmailConfirmationTokenAsync(user);
+		}
+
+		public async Task<IdentityResult> ConfirmEmailAsync(User user, string token)
+		{
+			return await _UserManager.ConfirmEmailAsync(user, token);
+		}
+
+		
+
+		
+
+
+		public async Task<IdentityResult> AddUserAsync(User user, string password)
 		{
 			return await _UserManager.CreateAsync(user, password);
 		}
@@ -47,7 +72,6 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 				});
 			}
 		}
-
 		public async Task<User> GetUserAsync(string email)
 		{
 			var user = await _Context.Users.FirstOrDefaultAsync(x => x.Email == email);

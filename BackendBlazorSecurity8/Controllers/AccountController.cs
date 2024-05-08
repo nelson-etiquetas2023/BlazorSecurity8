@@ -1,9 +1,10 @@
-﻿using BackendBlazorSecurity8.UnitsOfWork.Interfaces;
-using Microsoft.AspNetCore.Http;
+﻿using BackendBlazorSecurity8.Helpers;
+using BackendBlazorSecurity8.UnitsOfWork.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using SharedBlazorSecurity.DTOs;
 using SharedBlazorSecurity.Models;
+using SharedBlazorSecurity.Responses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -12,10 +13,95 @@ namespace BackendBlazorSecurity8.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class AccountController(IUserUnitsOfWork usersUnitOfWork, IConfiguration configuration) : ControllerBase
+	public class AccountController(IUserUnitsOfWork usersUnitOfWork, IConfiguration configuration, IMailHelper mailHelper) : ControllerBase
 	{
         private readonly IUserUnitsOfWork _usersUnitOfWork = usersUnitOfWork;
         private readonly IConfiguration _configuration = configuration;
+        private readonly IMailHelper _mailHelper = mailHelper;
+
+        [HttpPost("RecoveryPassword")]
+        public async Task<IActionResult> RecoveryPasswordAsync([FromBody] EmailDTO model) 
+        {
+            var user = await _usersUnitOfWork.GetUserAsync(model.Email);
+            if (user == null) 
+            {
+                return NotFound();
+            }
+
+            var myToken = await _usersUnitOfWork.GeneratePasswordResetTokenAsync(user);
+            var tokenLink = Url.Action("ResetPassword", "accounts", new { 
+                userId = user.Id,
+                token = myToken
+            }, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+
+            var response = _mailHelper.SendMail(user.FullName, user.Email!,
+                $"Orders - Recuperación de Contraseña",
+                $"<h1>Orders - Recuperacion de contraseña</h1>" +
+                $"<p>Para recuperar su contraseña, por favor hacer click 'Recuperar Contraseña':</p>" +
+                $"<b><a href={tokenLink}>Recuperar Contraseña</a></b>");
+
+            if (response.WasSuccess) 
+            {
+                return NoContent();
+            }
+
+            return BadRequest(response.Message);
+
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO model) 
+        {
+            var user = await _usersUnitOfWork.GetUserAsync(model.Email);
+            if (user == null) 
+            {
+                return NotFound();
+            }
+
+            var result = await _usersUnitOfWork.ResetPasswordAsync(user, model.Token, model.Password);
+            if (result.Succeeded) 
+            {
+                return NoContent(); 
+            }
+
+            return BadRequest(result.Errors.FirstOrDefault()!.Description);
+        }
+
+        [HttpPost("ResedTokenAsync")]
+        public async Task<IActionResult> ResendTokenAsync([FromBody] EmailDTO model) 
+        {
+            var user = await _usersUnitOfWork.GetUserAsync(model.Email);
+            if (user == null) 
+            {
+                return NotFound();
+            }
+            var response = await SendConfirmationEmailAsync(user);
+            if (response.WasSuccess) 
+            {
+                return NoContent();
+            }
+            return BadRequest(response.Message);
+        }
+   
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmailAsync(string userId, string token) 
+        {
+			token = token.Replace(" ", "+");
+            var userGuid = new Guid(userId).ToString();
+			var user = await _usersUnitOfWork.GetUserAsync(userGuid);
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			var result = await _usersUnitOfWork.ConfirmEmailAsync(user, token);
+			if (!result.Succeeded)
+			{
+				return BadRequest(result.Errors.FirstOrDefault());
+			}
+
+			return NoContent();
+		}
 
 		[HttpPost("CreateUser")]
         public async Task<IActionResult> CreateUser([FromBody] UserDTO model) 
@@ -43,7 +129,6 @@ namespace BackendBlazorSecurity8.Controllers
 
             return BadRequest("Email o contraseña incorrectos");
         }
-
 
         private TokenDTO BuildToken(User user) 
         {
@@ -74,5 +159,21 @@ namespace BackendBlazorSecurity8.Controllers
                 Expiration = expiration
             };
         }
-    }
+		private async Task<ActionResponse<string>> SendConfirmationEmailAsync(User user)
+		{
+			var myToken = await _usersUnitOfWork.GenerateEmailConfirmationTokenAsync(user);
+			var tokenLink = Url.Action("ConfirmEmail", "accounts", new
+			{
+				userId = user.Id,
+				token = myToken
+			}, HttpContext.Request.Scheme, _configuration["Url Frontend"]);
+
+			return _mailHelper.SendMail(user.FullName, user.Email!,
+				$"Orders - Confirmación de cuenta",
+				$"<h1>Orders - Confirmación de cuenta</h1>" +
+				$"<p>Para habilitar el usuario, por favor hacer clic 'Confirmar Email':</p>" +
+				$"<b><a href ={tokenLink}>Confirmar Email</a></b>");
+		}
+
+	}
 }
