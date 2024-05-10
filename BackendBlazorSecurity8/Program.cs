@@ -1,4 +1,4 @@
-using BackendBlazorSecurity8.Data;
+ using BackendBlazorSecurity8.Data;
 using BackendBlazorSecurity8.Repositories.Implementations;
 using BackendBlazorSecurity8.Repositories.Interfaces;
 using BackendBlazorSecurity8.UnitsOfWork.Implementations;
@@ -8,6 +8,10 @@ using SharedBlazorSecurity.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using BackendBlazorSecurity8.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -72,6 +76,10 @@ builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
 builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 
+//Cities Mail-Helper
+builder.Services.AddScoped<IMailHelper, MailHelper>();
+
+
 
 // 1.- Inyecto el servicio de Repositorio de  usuario.
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -82,7 +90,7 @@ builder.Services.AddScoped<IUserUnitsOfWork, UserUnitOfWork>();
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
 	x.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
-	x.SignIn.RequireConfirmedEmail = true;
+	x.SignIn.RequireConfirmedEmail = false;
 	x.User.RequireUniqueEmail = true;
 	x.Password.RequireDigit = false;
 	x.Password.RequiredUniqueChars = 0;
@@ -91,13 +99,22 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
 	x.Password.RequireUppercase = false;
 	x.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 	x.Lockout.MaxFailedAccessAttempts = 3;
-	x.Lockout.AllowedForNewUsers = true;
+	x.Lockout.AllowedForNewUsers = false;
 })
 	.AddEntityFrameworkStores<ApplicationDbContext>()
 	.AddDefaultTokenProviders();
 
 
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(x => x.TokenValidationParameters = new TokenValidationParameters
+	{
+		ValidateIssuer = false,
+		ValidateAudience = false,
+		ValidateLifetime = true,
+		ValidateIssuerSigningKey = true,
+		IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["jwtkey"]!)),
+		ClockSkew = TimeSpan.Zero,
+	});
 
 var app = builder.Build();
 

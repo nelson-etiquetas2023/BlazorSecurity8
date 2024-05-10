@@ -37,8 +37,6 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 		public async Task CheckRoleAsync(string roleName) =>
 			await _userRepository.CheckRoleAsync(roleName);
 
-		
-
 		public async Task<User> GetUserAsync(string email) =>
 			await _userRepository.GetUserAsync(email);
 

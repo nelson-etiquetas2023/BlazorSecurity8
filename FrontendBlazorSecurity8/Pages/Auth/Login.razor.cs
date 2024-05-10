@@ -15,9 +15,10 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 		[Inject] private IRepository Repository { get; set; } = null!;
 		[Inject] private ILoginService LoginService { get; set; } = null!;
 
-		private async Task LoginAsync() 
+		private async Task LoginUserAsync() 
 		{
-			var responseHttp = await Repository.PostAsync<LoginDTO, TokenDTO>("/api/account/login", loginDTO);
+			Console.WriteLine("login aplicacion....");
+			var responseHttp = await Repository.PostAsync<LoginDTO, TokenDTO>("/Api/Account/LoginUser", loginDTO);
 
 			if (responseHttp.Error) 
 			{

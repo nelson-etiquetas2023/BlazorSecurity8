@@ -17,12 +17,12 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		private readonly RoleManager<IdentityRole> _RoleManager;
 		private readonly SignInManager<User> _SignInManager;
 
-		public UserRepository(ApplicationDbContext context, UserManager<User> usemanager, RoleManager<IdentityRole> useRole, SignInManager<User> SignManager )  
+		public UserRepository(ApplicationDbContext context, UserManager<User> usemanager, RoleManager<IdentityRole> roleManager, SignInManager<User> SignManager )  
 
         {
 			_Context = context;
 			_UserManager = usemanager;
-			_RoleManager = useRole;	
+			_RoleManager = roleManager;	
 			_SignInManager = SignManager;
 		}
 
@@ -45,11 +45,6 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		{
 			return await _UserManager.ConfirmEmailAsync(user, token);
 		}
-
-		
-
-		
-
 
 		public async Task<IdentityResult> AddUserAsync(User user, string password)
 		{
@@ -74,7 +69,12 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		}
 		public async Task<User> GetUserAsync(string email)
 		{
-			var user = await _Context.Users.FirstOrDefaultAsync(x => x.Email == email);
+			var user = await _Context.Users
+				.Include(u => u.City)
+				.ThenInclude(u => u.State!)
+				.ThenInclude(u => u.Country)
+				.FirstOrDefaultAsync(x => x.Email == email);
+
 			return user!;
 		}
 

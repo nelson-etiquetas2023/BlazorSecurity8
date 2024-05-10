@@ -9,17 +9,54 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
+#pragma warning disable IDE0290 // Usar constructor principal
 namespace BackendBlazorSecurity8.Controllers
 {
-	[Route("api/[controller]")]
 	[ApiController]
-	public class AccountController(IUserUnitsOfWork usersUnitOfWork, IConfiguration configuration, IMailHelper mailHelper) : ControllerBase
+	[Route("Api/[controller]")]
+	public class AccountController : ControllerBase
 	{
-        private readonly IUserUnitsOfWork _usersUnitOfWork = usersUnitOfWork;
-        private readonly IConfiguration _configuration = configuration;
-        private readonly IMailHelper _mailHelper = mailHelper;
+        private readonly IUserUnitsOfWork _usersUnitOfWork;
+        private readonly IConfiguration _configuration;
+        private readonly IMailHelper _mailHelper;
 
-        [HttpPost("RecoveryPassword")]
+
+        public AccountController(IUserUnitsOfWork usersUnitOfWork, IConfiguration configuration, IMailHelper mailHelper)
+
+        {
+            _usersUnitOfWork = usersUnitOfWork;
+            _configuration = configuration;
+            _mailHelper = mailHelper;
+		}
+
+		[HttpPost("CreateUser")]
+		public async Task<IActionResult> CreateUser([FromBody] UserDTO model)
+		{
+			User user = model;
+			var result = await _usersUnitOfWork.AddUserAsync(user, model.Password);
+			if (result.Succeeded)
+			{
+				await _usersUnitOfWork.AddUserToRoleAsync(user, user.UserType.ToString());
+				return Ok(BuildToken(user));
+			}
+
+			return BadRequest(result.Errors.FirstOrDefault());
+		}
+
+		[HttpPost("LoginUser")]
+		public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model)
+		{
+			var result = await _usersUnitOfWork.LoginAsync(model);
+			if (result.Succeeded)
+			{
+				var user = await _usersUnitOfWork.GetUserAsync(model.Email);
+				return Ok(BuildToken(user));
+			}
+
+			return BadRequest("Email o contraseña incorrectos");
+		}
+
+		[HttpPost("RecoveryPassword")]
         public async Task<IActionResult> RecoveryPasswordAsync([FromBody] EmailDTO model) 
         {
             var user = await _usersUnitOfWork.GetUserAsync(model.Email);
@@ -102,34 +139,6 @@ namespace BackendBlazorSecurity8.Controllers
 
 			return NoContent();
 		}
-
-		[HttpPost("CreateUser")]
-        public async Task<IActionResult> CreateUser([FromBody] UserDTO model) 
-        {
-            User user = model;
-            var result = await _usersUnitOfWork.AddUserAsync(user, model.Password);
-            if (result.Succeeded) 
-            {
-                await _usersUnitOfWork.AddUserToRoleAsync(user, user.UserType.ToString());
-                return Ok(BuildToken(user));
-            }
-
-            return BadRequest(result.Errors.FirstOrDefault());
-        }
-
-        [HttpPost("Login")]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginDTO model) 
-        {
-            var result = await _usersUnitOfWork.LoginAsync(model);
-            if (result.Succeeded) 
-            {
-                var user = await _usersUnitOfWork.GetUserAsync(model.Email);
-                return Ok(BuildToken(user));
-            }
-
-            return BadRequest("Email o contraseña incorrectos");
-        }
-
         private TokenDTO BuildToken(User user) 
         {
             var claims = new List<Claim>
@@ -174,6 +183,5 @@ namespace BackendBlazorSecurity8.Controllers
 				$"<p>Para habilitar el usuario, por favor hacer clic 'Confirmar Email':</p>" +
 				$"<b><a href ={tokenLink}>Confirmar Email</a></b>");
 		}
-
 	}
 }
