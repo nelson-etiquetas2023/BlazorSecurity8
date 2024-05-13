@@ -39,7 +39,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 		}
 		private async Task LoadUserAsync()
 		{
-			var httpResponse = await Repository.GetAsync<User>($"/api/account");
+			var httpResponse = await Repository.GetAsync<User>("/Api/Account");
 			if (httpResponse.Error)
 			{
 				if (httpResponse.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
@@ -100,7 +100,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 		}
 		private async Task LoadCitiesAsync(int stateId)
 		{
-			var responseHttp = await Repository.GetAsync<List<City>>($"/api/cities/combo{stateId}");
+			var responseHttp = await Repository.GetAsync<List<City>>($"/api/Cities/combo/{stateId}");
 			if (responseHttp.Error)
 			{
 				var message = await responseHttp.GetErrorMessageAsync();
@@ -112,7 +112,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 
 		private async Task SaveUserAsync() 
 		{
-			var responseHttp = await Repository.PutAsync<User, TokenDTO>("/api/account", user!);
+			var responseHttp = await Repository.PutAsync<User, TokenDTO>("/Api/Account", user!);
 			if (responseHttp.Error) 
 			{
 				var message = await responseHttp.GetErrorMessageAsync();

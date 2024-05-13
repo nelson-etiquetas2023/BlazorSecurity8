@@ -49,5 +49,8 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 		public async Task LogoutAsync() =>
 			await _userRepository.LogoutAsync();
 
+		public async Task<IdentityResult> UpdateUserAsync(User user) => 
+			await _userRepository.UpdateUserAsync(user);
+
 	}
 }

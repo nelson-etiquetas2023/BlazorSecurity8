@@ -70,9 +70,9 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		public async Task<User> GetUserAsync(string email)
 		{
 			var user = await _Context.Users
-				.Include(u => u.City)
+				.Include(u => u.City!)
 				.ThenInclude(u => u.State!)
-				.ThenInclude(u => u.Country)
+				.ThenInclude(u => u.Country!)
 				.FirstOrDefaultAsync(x => x.Email == email);
 
 			return user!;
@@ -91,6 +91,11 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		public async Task LogoutAsync()
 		{
 			await _SignInManager.SignOutAsync();
+		}
+
+		public async Task<IdentityResult> UpdateUserAsync(User user) 
+		{
+			return await _UserManager.UpdateAsync(user);
 		}
 	}
 }
