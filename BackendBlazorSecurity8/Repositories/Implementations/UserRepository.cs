@@ -56,6 +56,11 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 			await _UserManager.AddToRoleAsync(user, roleName);	
 		}
 
+		public Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword)
+		{
+			return _UserManager.ChangePasswordAsync(user, currentPassword, newPassword);
+		}
+
 		public async Task CheckRoleAsync(string roleName)
 		{
 			var roleExist = await _RoleManager.RoleExistsAsync(roleName);
@@ -67,6 +72,7 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 				});
 			}
 		}
+
 		public async Task<User> GetUserAsync(string email)
 		{
 			var user = await _Context.Users
@@ -76,6 +82,19 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 				.FirstOrDefaultAsync(x => x.Email == email);
 
 			return user!;
+		}
+
+		public async Task<User> GetUserAsync(Guid userId) 
+		{
+
+			var user = await _Context.Users
+				.Include(u => u.City!)
+				.ThenInclude(c => c.State!)
+				.ThenInclude(s => s.CountryId)
+				.FirstOrDefaultAsync(x => x.Id == userId.ToString());
+
+			return user!;
+
 		}
 
 		public async Task<bool> IsUserInRoleAsync(User user, string roleName)
@@ -97,5 +116,7 @@ namespace BackendBlazorSecurity8.Repositories.Implementations
 		{
 			return await _UserManager.UpdateAsync(user);
 		}
+
+		
 	}
 }

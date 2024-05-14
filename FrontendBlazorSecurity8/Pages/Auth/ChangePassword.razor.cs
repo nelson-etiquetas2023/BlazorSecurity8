@@ -1,4 +1,4 @@
-using CurrieTechnologies.Razor.SweetAlert2;
+ using CurrieTechnologies.Razor.SweetAlert2;
 using FrontendBlazorSecurity8.Repositories;
 using Microsoft.AspNetCore.Components;
 using SharedBlazorSecurity.DTOs;
@@ -7,7 +7,7 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 {
 	public partial class ChangePassword
 	{
-		private ChangePasswordDTO changePasswordDTO = new();
+		private readonly ChangePasswordDTO changePasswordDTO = new();
 		private bool loading;
 
 		[Inject] private NavigationManager NavigatorManager { get; set; } = null!;
@@ -18,7 +18,8 @@ namespace FrontendBlazorSecurity8.Pages.Auth
 		private async Task ChangePasswordAsync() 
 		{
 			loading = true;
-			var responseHttp = await Repository.PostAsync("/api/accounts/changePassword", changePasswordDTO);
+			var responseHttp = await Repository.PostAsync("/Api/Account/changePassword", changePasswordDTO);
+			                                                           
 			loading = false;
 			if (responseHttp.Error) 
 			{

@@ -8,6 +8,7 @@ using SharedBlazorSecurity.DTOs;
 using SharedBlazorSecurity.Models;
 using SharedBlazorSecurity.Responses;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 
@@ -30,6 +31,34 @@ namespace BackendBlazorSecurity8.Controllers
             _configuration = configuration;
             _mailHelper = mailHelper;
 		}
+
+        [HttpPost("changePassword")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> ChangePasswordAsync(ChangePasswordDTO model) 
+        {
+            if (!ModelState.IsValid) 
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _usersUnitOfWork.GetUserAsync(User.Identity!.Name!);
+            if (user == null) 
+            {
+                return NotFound();
+            }
+
+            var result = await _usersUnitOfWork.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+            if (!result.Succeeded) 
+            {
+                return BadRequest(result.Errors.FirstOrDefault()!.Description);
+            }
+
+            return NoContent();
+
+
+
+        }
+
 
 
         [HttpPut]

@@ -49,8 +49,15 @@ namespace BackendBlazorSecurity8.UnitsOfWork.Implementations
 		public async Task LogoutAsync() =>
 			await _userRepository.LogoutAsync();
 
+		public async Task<IdentityResult> ChangePasswordAsync(User user, string currentPassword, string newPassword) =>
+			await _userRepository.ChangePasswordAsync(user, currentPassword, newPassword);
+
+
 		public async Task<IdentityResult> UpdateUserAsync(User user) => 
 			await _userRepository.UpdateUserAsync(user);
 
+		public async Task<User> GetUserAsync(Guid userId) =>
+			await _userRepository.GetUserAsync(userId);
+	
 	}
 }
